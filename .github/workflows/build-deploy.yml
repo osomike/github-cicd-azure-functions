@@ -5,10 +5,13 @@
 name: Build and deploy Python project to Azure Function App - dipfunction
 
 on:
-  push:
-    branches:
-      - main
+#  push:
+#    branches:
+#      - main
   workflow_dispatch:
+    inputs:
+      type: environment
+      default: dev
 
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
@@ -19,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Setup Python version
         uses: actions/setup-python@v1
@@ -65,6 +68,6 @@ jobs:
           app-name: 'dipfunction'
           slot-name: 'production'
           package: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-          publish-profile: ${{ secrets.AzureAppService_PublishProfile_1234 }}
+          publish-profile: ${{ secrets.AZURE_APP_FUNCTION_PUBLISH_PROFILE }}
           scm-do-build-during-deployment: true
           enable-oryx-build: true
