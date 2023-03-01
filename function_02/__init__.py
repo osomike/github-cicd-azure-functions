@@ -17,7 +17,7 @@ def main(myreq: func.HttpRequest) -> func.HttpResponse:
         logging.info(msg)
         df = data(**json_value)
 
-        msg_result = f'The DataFrame with random values is:\n{df.to_string()}'
+        msg_result = f'The result DataFrame with random values is:\n{df.to_string()}'
 
         logging.info(msg_result)
         return func.HttpResponse(msg_result, status_code=200)
