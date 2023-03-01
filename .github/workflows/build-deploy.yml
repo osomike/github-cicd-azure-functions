@@ -2,7 +2,7 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure Functions: https://aka.ms/python-webapps-actions
 
-name: Build and deploy Python project to Azure Function App
+name: Build and deploy
 
 on:
 #  push:
@@ -10,7 +10,7 @@ on:
 #      - main
   workflow_dispatch:
     inputs:
-      env:
+      environment:
         type: environment
         default: dev
       slot:
@@ -18,7 +18,7 @@ on:
         options:
           - production
           - development
-        default: development
+        default: production
 
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
@@ -27,6 +27,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -56,10 +57,11 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-function.outputs.webapp-url }}
+#    environment:
+#      name: 'production'
+#      url: ${{ steps.deploy-to-function.outputs.webapp-url }}
 
     steps:
       - name: Download artifact from build job
@@ -67,6 +69,13 @@ jobs:
         with:
           name: python-app
           path: .
+
+      - name: test variables
+        run: |
+          echo Environment is: ${{ inputs.environment }}
+          echo Slot deployment is: ${{ inputs.slot}}
+          echo TEST variable is: ${{ vars.TEST }}
+#          echo Publish profile is: "${{ secrets.AZURE_APP_FUNCTION_PUBLISH_PROFILE }}"
 
       - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
