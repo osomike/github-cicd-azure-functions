@@ -2,7 +2,7 @@
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 # More info on Python, GitHub Actions, and Azure Functions: https://aka.ms/python-webapps-actions
 
-name: Build and deploy Python project to Azure Function App - dipfunction
+name: Build and deploy Python project to Azure Function App
 
 on:
 #  push:
@@ -10,8 +10,15 @@ on:
 #      - main
   workflow_dispatch:
     inputs:
-      type: environment
-      default: dev
+      env:
+        type: environment
+        default: dev
+      slot:
+        type: choice
+        options:
+          - production
+          - development
+        default: development
 
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
