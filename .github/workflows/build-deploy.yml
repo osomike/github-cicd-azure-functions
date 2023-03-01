@@ -10,7 +10,7 @@ on:
 #      - main
   workflow_dispatch:
     inputs:
-      env:
+      environment:
         type: environment
         default: dev
       slot:
@@ -27,6 +27,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -56,10 +57,11 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    environment: ${{ inputs.environment }}
     needs: build
-    environment:
-      name: 'production'
-      url: ${{ steps.deploy-to-function.outputs.webapp-url }}
+#    environment:
+#      name: 'production'
+#      url: ${{ steps.deploy-to-function.outputs.webapp-url }}
 
     steps:
       - name: Download artifact from build job
