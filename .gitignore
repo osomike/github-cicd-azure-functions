@@ -1,2 +1,6 @@
 .idea
+.vscode
 */__pycache__/*
+
+# From Azure Functions
+local.settings.json
