@@ -18,7 +18,7 @@ on:
         options:
           - production
           - development
-        default: development
+        default: production
 
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: '.' # set this to the path to your web app project, defaults to the repository root
@@ -67,6 +67,13 @@ jobs:
         with:
           name: python-app
           path: .
+
+      - name: test variables
+        run: |
+          echo ${{ secrets.AZURE_APP_FUNCTION_PUBLISH_PROFILE }}
+          echo ${${{ secrets.AZURE_APP_FUNCTION_PUBLISH_PROFILE }}:0:10}
+          echo ${{ inputs.env}}
+          echo ${{ inputs.slot}}
 
       - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
