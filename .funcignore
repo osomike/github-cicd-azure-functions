@@ -1,1 +1,9 @@
+# github workflows
+.github
+
+# virtual environments
 venv
+
+# IDE folders
+.vscode
+.idea
