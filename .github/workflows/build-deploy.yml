@@ -70,10 +70,11 @@ jobs:
 
       - name: test variables
         run: |
-          echo ${{ secrets.AZURE_APP_FUNCTION_PUBLISH_PROFILE }}
-          echo ${${{ secrets.AZURE_APP_FUNCTION_PUBLISH_PROFILE }}:0:10}
           echo ${{ inputs.env}}
           echo ${{ inputs.slot}}
+          echo ${{ vars.TEST }}
+          echo ${{ secrets.AZURE_APP_FUNCTION_PUBLISH_PROFILE }}
+          echo ${${{ secrets.AZURE_APP_FUNCTION_PUBLISH_PROFILE }}:0:10}
 
       - name: 'Deploy to Azure Functions'
         uses: Azure/functions-action@v1
