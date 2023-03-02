@@ -4,3 +4,5 @@
 
 # From Azure Functions
 local.settings.json
+
+venv
