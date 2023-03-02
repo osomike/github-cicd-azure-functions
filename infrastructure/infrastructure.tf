@@ -6,7 +6,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "~>2.90"
+      version = "=3.45.0"
     }
   }
   # This block allows us to save the terraform.tfstate file on the cloud, so a team of developers can use the terraform
@@ -85,46 +85,58 @@ resource "azurerm_storage_account" "storageaccount" {
 ###########################################################
 ###################  App Service Plan #####################
 ###########################################################
-resource "azurerm_app_service_plan" "service_plan_prd" {
+resource "azurerm_service_plan" "service_plan_prd" {
   name                = "${var.default_prefix}-${var.random_id}-service-plan-prd"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-
-  sku {
-    tier = "Standard"
-    size = "S1"
-  }
+  os_type             = "Linux"
+  sku_name            = "Y1"
 }
 
-resource "azurerm_app_service_plan" "service_plan_dev" {
+resource "azurerm_service_plan" "service_plan_dev" {
   name                = "${var.default_prefix}-${var.random_id}-service-plan-dev"
   location            = azurerm_resource_group.rg.location
   resource_group_name = azurerm_resource_group.rg.name
-
-  sku {
-    tier = "Standard"
-    size = "S1"
-  }
+  os_type             = "Linux"
+  sku_name            = "Y1"
 }
 
 
 ###########################################################
 #####################  App Function #######################
 ###########################################################
-resource "azurerm_function_app" "function_app_prd" {
-  name                       = "${var.default_prefix}-${var.random_id}-function-app-prd"
-  location                   = azurerm_resource_group.rg.location
-  resource_group_name        = azurerm_resource_group.rg.name
-  app_service_plan_id        = azurerm_app_service_plan.service_plan_prd.id
-  storage_account_name       = azurerm_storage_account.storageaccount.name
-  storage_account_access_key = azurerm_storage_account.storageaccount.primary_access_key
+resource "azurerm_linux_function_app" "function_app_prd" {
+  name                         = "${var.default_prefix}-${var.random_id}-function-app-prd"
+  location                     = azurerm_resource_group.rg.location
+  resource_group_name          = azurerm_resource_group.rg.name
+
+  service_plan_id              = azurerm_service_plan.service_plan_prd.id
+  storage_account_name         = azurerm_storage_account.storageaccount.name
+  storage_account_access_key   = azurerm_storage_account.storageaccount.primary_access_key
+
+  functions_extension_version  = "~4"
+  site_config {
+    application_stack {
+      python_version      = "3.10"
+    }
+  }
+
 }
 
-resource "azurerm_function_app" "function_app_dev" {
-  name                       = "${var.default_prefix}-${var.random_id}-function-app-dev"
-  location                   = azurerm_resource_group.rg.location
-  resource_group_name        = azurerm_resource_group.rg.name
-  app_service_plan_id        = azurerm_app_service_plan.service_plan_dev.id
-  storage_account_name       = azurerm_storage_account.storageaccount.name
-  storage_account_access_key = azurerm_storage_account.storageaccount.primary_access_key
+resource "azurerm_linux_function_app" "function_app_dev" {
+  name                         = "${var.default_prefix}-${var.random_id}-function-app-dev"
+  location                     = azurerm_resource_group.rg.location
+  resource_group_name          = azurerm_resource_group.rg.name
+
+  service_plan_id              = azurerm_service_plan.service_plan_dev.id
+  storage_account_name         = azurerm_storage_account.storageaccount.name
+  storage_account_access_key   = azurerm_storage_account.storageaccount.primary_access_key
+
+  functions_extension_version  = "~4"
+
+  site_config {
+    application_stack {
+      python_version      = "3.10"
+    }
+  }
 }
