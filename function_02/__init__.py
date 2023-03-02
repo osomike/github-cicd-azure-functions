@@ -6,6 +6,7 @@ from common.package_03 import data
 
 
 def main(myreq: func.HttpRequest) -> func.HttpResponse:
+    logging.info('This is a test message')
     logging.info('Python HTTP trigger function processed a request.')
     logging.info(f'The request is {myreq}')
 
