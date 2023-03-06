@@ -24,6 +24,6 @@ def main(myreq: func.HttpRequest) -> func.HttpResponse:
         return func.HttpResponse(msg_result, status_code=200)
 
     except ValueError:
-        msg = 'Error, the request does not contain a JSON on its body'
+        msg = 'Error, the request does not contain a JSON on its body. Please include one with the fields rows and cols'
         logging.error(msg)
         return func.HttpResponse(msg, status_code=500)
